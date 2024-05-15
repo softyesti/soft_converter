@@ -1,5 +1,6 @@
 # CHANGELOG
 
-## 0.0.1
+## 0.1.0
 
-- Initial release
+- Add feature: Convert .jpg and .png images to .webp
+- Add exceptions: Process and PathNotFound

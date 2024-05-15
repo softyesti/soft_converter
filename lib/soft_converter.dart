@@ -1,4 +1,5 @@
-/// Support for doing something awesome.
+/// Convert some videos and images to some formats
 library;
 
-export 'src/soft_converter_base.dart';
+export 'src/exceptions.dart';
+export 'src/image_converter.dart' show SoftImageConverter;

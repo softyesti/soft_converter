@@ -1,6 +1,9 @@
-.PHONY dependencies
+.PHONY: run
+default: run
 
-default: dependencies
+run:
+	@echo "Running package example"
+	@dart run ./example/soft_converter_example.dart
 
 dependencies:
 	@echo "Installing dependencies"
