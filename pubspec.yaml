@@ -9,7 +9,7 @@ platforms:
   macos:
   linux:
 
-topics: 
+topics:
   - converter
   - image
   - video
