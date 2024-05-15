@@ -20,7 +20,6 @@ final class SoftImageConverter {
   late String _exec;
 
   /// Convert .jpg and .png images to .webp
-  /// Throws [SoftConverterPathNotFound]
   Future<File> toWEBP({
     required String input,
     int quality = 100,
