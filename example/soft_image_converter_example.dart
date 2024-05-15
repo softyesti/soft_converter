@@ -3,7 +3,13 @@
 import 'package:soft_converter/soft_converter.dart';
 
 Future<void> main() async {
-  final imageConverter = SoftImageConverter();
+  // The paths for the binaries are optional, if not defined
+  // SoftConverter will use the system path.
+  final imageConverter = SoftImageConverter(
+    cwebpWindows: 'bin/cwebp_win.exe',
+    cwebpMacOS: 'bin/cwebp_macos',
+    cwebpLinux: 'bin/cwebp_linux',
+  );
 
   try {
     final file = await imageConverter.toWEBP(

@@ -4,20 +4,34 @@ import 'package:path/path.dart' as p;
 import 'package:soft_converter/src/exceptions.dart';
 
 final class SoftImageConverter {
-  SoftImageConverter() {
-    final dir = Directory.current.path;
-    final base = p.join(dir, 'bin', 'cwebp');
-
-    if (Platform.isWindows) {
-      _exec = p.join(base, 'cwebp_windows.exe');
-    } else if (Platform.isMacOS) {
-      _exec = p.join(base, 'cwebp_macos');
+  /// Initializes [SoftImageConverter] with the paths to the cwebp binaries.
+  /// If not defined, [SoftImageConverter] will use your system path.
+  SoftImageConverter({
+    this.cwebpWindows,
+    this.cwebpMacOS,
+    this.cwebpLinux,
+  }) {
+    if (Platform.isWindows && cwebpWindows != null) {
+      _executable = cwebpWindows!;
+    } else if (Platform.isMacOS && cwebpMacOS != null) {
+      _executable = cwebpMacOS!;
+    } else if (Platform.isLinux && cwebpLinux != null) {
+      _executable = cwebpLinux!;
     } else {
-      _exec = p.join(base, 'cwebp_linux');
+      _executable = 'cwebp';
     }
   }
 
-  late String _exec;
+  /// cwebp binary path for windows
+  final String? cwebpWindows;
+
+  /// cwebp binary path for macOS
+  final String? cwebpMacOS;
+
+  /// cwebp binary path for linux
+  final String? cwebpLinux;
+
+  late String _executable;
 
   /// Convert .jpg and .png images to .webp
   Future<File> toWEBP({
@@ -34,10 +48,9 @@ final class SoftImageConverter {
 
     try {
       final path = p.setExtension(p.withoutExtension(output ?? input), '.webp');
-      final result = await Process.run(
-        _exec,
-        ['-q', quality.toString(), input, '-o', path],
-      );
+
+      final args = ['-q', quality.toString(), input, '-o', path];
+      final result = await Process.run(_executable, args);
 
       final file = File(path);
       if (result.exitCode != 0 && !file.existsSync()) {
