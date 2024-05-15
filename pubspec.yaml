@@ -1,7 +1,20 @@
 name: soft_converter
 description: Convert some videos and images to some formats
 version: 0.1.0
+homepage: https://softyes.com.br
 repository: https://github.com/softyesti/soft_converter
+
+platforms:
+  windows:
+  macos:
+  linux:
+
+topics: 
+  - converter
+  - image
+  - video
+  - FFmpeg
+  - cwebp
 
 environment:
   sdk: ^3.3.4
