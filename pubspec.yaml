@@ -13,7 +13,7 @@ topics:
   - converter
   - image
   - video
-  - FFmpeg
+  - ffmpeg
   - cwebp
 
 environment:
