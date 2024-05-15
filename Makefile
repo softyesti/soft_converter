@@ -2,8 +2,9 @@
 default: run
 
 run:
-	@echo "Running package example"
-	@dart run ./example/soft_image_converter_example.dart
+	@echo "Running package examples"
+	@dart run ./example/image_converter_example.dart
+	@dart run ./example/video_converter_example.dart
 
 dependencies:
 	@echo "Installing dependencies"
