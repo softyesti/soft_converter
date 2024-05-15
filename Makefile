@@ -9,3 +9,11 @@ run:
 dependencies:
 	@echo "Installing dependencies"
 	@dart pub get
+
+publish:
+	@echo "Publishing package"
+	@dart pub publish
+
+publish-dry-run:
+	@echo "Publishing package in dry-run mode"
+	@dart pub publish --dry-run
