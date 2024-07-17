@@ -1,3 +1,5 @@
 .dart_tool/
 pubspec.lock
 bin/
+assets/*.webp
+assets/*.webm
