@@ -31,29 +31,80 @@ final class SoftImageConverter {
   /// cwebp binary path for linux
   final String? cwebpLinux;
 
+  /// Executable name or path
   late String _executable;
 
-  /// Convert .jpg and .png images to .webp
-  Future<File> toWEBP({
-    required String input,
+  /// Convert multiple `.jpg` and `.png` images to `.webp` and
+  /// return a list of converted files.
+  ///
+  /// Throws
+  /// - [SoftConverterPathNotFound] if any path does't exists;
+  /// - [SoftConverterProcessException] if occur any conversion error;
+  /// - [SoftConverterException] if occur unknown errors.
+  ///
+  /// Example:
+  ///
+  /// ```dart
+  /// final converter = SoftImageConverter();
+  ///
+  /// final output = Directory('path/to/outDir');
+  /// final inputs = [File('path/to/foo.jpg'), File('path/to/foo.png')];
+  ///
+  /// final files = await converter.toWEBP(inputs, output);
+  /// for (final file in files) {
+  ///   print(file.path);
+  /// }
+  /// ```
+  Future<List<File>> toWEBP({
+    required List<File> inputs,
+    Directory? output,
     int quality = 100,
-    String? output,
   }) async {
-    if (!File(input).existsSync()) {
-      throw SoftConverterPathNotFound(
-        'The input path not found',
-        path: input,
-      );
-    }
-
     try {
-      final path = p.setExtension(p.withoutExtension(output ?? input), '.webp');
+      if (output?.existsSync() == false) {
+        throw SoftConverterPathNotFound(
+          'The output directory not found',
+          path: output!.path,
+        );
+      }
 
-      final args = ['-q', quality.toString(), input, '-o', path];
+      final files = inputs.map(
+        (file) => _convert(input: file, output: output, quality: quality),
+      );
+
+      final converted = await Future.wait(files);
+      return converted;
+    } catch (e) {
+      throw SoftConverterException(e);
+    }
+  }
+
+  Future<File> _convert({
+    required File input,
+    Directory? output,
+    int quality = 100,
+  }) async {
+    try {
+      if (!input.existsSync()) {
+        throw SoftConverterPathNotFound(
+          'The input path not found',
+          path: input.path,
+        );
+      }
+
+      late String path;
+      if (output != null) {
+        final filename = p.basenameWithoutExtension(input.path);
+        path = p.join(output.path, p.setExtension(filename, '.webp'));
+      } else {
+        path = p.setExtension(p.withoutExtension(input.path), '.webp');
+      }
+
+      final args = ['-q', quality.toString(), input.path, '-o', path];
       final result = await Process.run(_executable, args);
 
       final file = File(path);
-      if (result.exitCode != 0 && !file.existsSync()) {
+      if (result.exitCode != 0 || !file.existsSync()) {
         throw SoftConverterProcessException(
           'Unknown error on convert image',
           code: result.exitCode,

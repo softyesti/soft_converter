@@ -31,26 +31,73 @@ final class SoftVideoConverter {
   /// FFmpeg binary path for linux
   final String? ffmpegLinux;
 
+  /// Executable name or path
   late String _executable;
 
-  /// Convert .mp4 videos to .webm
-  Future<File> toWEBM({
-    required String input,
-    String? output,
+  /// Convert multiple `.mp4` videos to `.webm` and
+  /// return a list of converted files.
+  ///
+  /// Throws
+  /// - [SoftConverterPathNotFound] if any path does't exists;
+  /// - [SoftConverterProcessException] if occur any conversion error;
+  /// - [SoftConverterException] if occur unknown errors.
+  ///
+  /// Example:
+  ///
+  /// ```dart
+  /// final converter = SoftVideoConverter();
+  ///
+  /// final output = Directory('path/to/outDir');
+  /// final inputs = [File('path/to/foo.mp4'), File('path/to/foo.mp4')];
+  ///
+  /// final files = await converter.toWEBM(inputs, output);
+  /// for (final file in files) {
+  ///   print(file.path);
+  /// }
+  /// ```
+  Future<List<File>> toWEBM({
+    required List<File> inputs,
+    Directory? output,
   }) async {
-    if (!File(input).existsSync()) {
-      throw SoftConverterPathNotFound(
-        'The input path not found',
-        path: input,
-      );
-    }
-
     try {
-      final path = p.setExtension(p.withoutExtension(output ?? input), '.webm');
+      if (output?.existsSync() == false) {
+        throw SoftConverterPathNotFound(
+          'The output directory not found',
+          path: output!.path,
+        );
+      }
+
+      final files = inputs.map((file) => _convert(input: file, output: output));
+      final converted = await Future.wait(files);
+      return converted;
+    } catch (e) {
+      throw SoftConverterException(e);
+    }
+  }
+
+  Future<File> _convert({
+    required File input,
+    Directory? output,
+  }) async {
+    try {
+      if (!input.existsSync()) {
+        throw SoftConverterPathNotFound(
+          'The input file not found',
+          path: input.path,
+        );
+      }
+
+      late String path;
+      if (output != null) {
+        final filename = p.basenameWithoutExtension(input.path);
+        path = p.join(output.path, p.setExtension(filename, '.webm'));
+      } else {
+        path = p.setExtension(p.withoutExtension(input.path), '.webm');
+      }
 
       final args = [
         '-i',
-        input,
+        input.path,
         '-f',
         'webm',
         '-c:v',
@@ -62,12 +109,12 @@ final class SoftVideoConverter {
         path,
         '-hide_banner',
       ];
-      final result = await Process.run(_executable, args);
 
       final file = File(path);
-      if (result.exitCode != 0 && !file.existsSync()) {
+      final result = await Process.run(_executable, args);
+      if (result.exitCode != 0 || !file.existsSync()) {
         throw SoftConverterProcessException(
-          'Unknown error on convert image',
+          'Unknown error on convert video',
           code: result.exitCode,
         );
       }
