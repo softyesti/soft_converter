@@ -1,23 +1,23 @@
 // ignore_for_file: avoid_print
 
+import 'dart:io';
+
 import 'package:soft_converter/soft_converter.dart';
 
 Future<void> main() async {
   // The paths for the binaries are optional, if not defined
   // SoftConverter will use the system path.
-  final imageConverter = SoftImageConverter(
-    cwebpWindows: 'bin/cwebp_win.exe',
-    cwebpMacOS: 'bin/cwebp_macos',
-    cwebpLinux: 'bin/cwebp_linux',
-  );
+  final imageConverter = SoftImageConverter();
 
   try {
-    final file = await imageConverter.toWEBP(
-      input: 'assets/space.jpg',
-      output: 'assets/space.webp',
+    final files = await imageConverter.toWEBP(
+      inputs: [File('assets/space.jpg')],
+      output: Directory('assets/'),
     );
 
-    print('Image file: ${file.path}');
+    for (final file in files) {
+      print('Image file path: ${file.path}');
+    }
   } catch (e) {
     rethrow;
   }
