@@ -7,10 +7,10 @@ import 'package:soft_converter/soft_converter.dart';
 Future<void> main() async {
   // The paths for the binaries are optional, if not defined
   // SoftConverter will use the system path.
-  final imageConverter = SoftImageConverter();
+  final converter = SoftImageConverter();
 
   try {
-    final files = await imageConverter.toWEBP(
+    final files = await converter.toWEBP(
       inputs: [File('assets/space.jpg')],
       output: Directory('assets/'),
     );
