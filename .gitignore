@@ -3,3 +3,6 @@ pubspec.lock
 bin/
 assets/*.webp
 assets/*.webm
+
+# FVM Version Cache
+.fvm/

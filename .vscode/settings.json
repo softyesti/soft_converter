@@ -10,5 +10,6 @@
     "softyes",
     "webm",
     "webp"
-  ]
+  ],
+  "dart.flutterSdkPath": ".fvm/versions/3.41.7"
 }
