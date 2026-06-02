@@ -1,6 +1,6 @@
 name: soft_converter
 description: Convert some videos and images to some formats
-version: 0.4.0
+
 homepage: https://softyes.com.br
 repository: https://github.com/softyesti/soft_converter
 
@@ -16,9 +16,11 @@ topics:
   - ffmpeg
   - cwebp
 
+version: 0.4.0
+
 environment:
-  sdk: ^3.11.5
-  flutter: ^3.41.7
+  sdk: ^3.12.1
+  flutter: ^3.44.1
 
 dependencies:
   path: ^1.8.0
