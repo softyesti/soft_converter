@@ -23,9 +23,14 @@ environment:
   flutter: ^3.44.1
 
 dependencies:
-  path: ^1.8.0
+  http: ^1.6.0
+  path: ^1.9.1
+  hooks: ^2.0.2
+  archive: ^4.0.9
+  code_assets: ^1.2.1
+  data_assets: ^0.20.0
 
 dev_dependencies:
-  lints: ^6.1.0
   test: ^1.24.0
+  lints: ^6.1.0
   very_good_analysis: ^10.2.0

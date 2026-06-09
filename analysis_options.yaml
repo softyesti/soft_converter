@@ -10,9 +10,4 @@ analyzer:
 
 linter:
   rules:
-    no_default_cases: false
     one_member_abstracts: false
-    public_member_api_docs: false
-    no_runtimeType_toString: false
-    avoid_setters_without_getters: false
-    avoid_positional_boolean_parameters: false

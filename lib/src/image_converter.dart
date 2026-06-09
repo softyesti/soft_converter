@@ -2,10 +2,15 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:soft_converter/src/exceptions.dart';
+import 'package:soft_converter/src/mixins/data_asset_mixin.dart';
 
-final class SoftImageConverter {
-  /// Initializes [SoftImageConverter] with the paths to the cwebp binaries.
-  /// If not defined, [SoftImageConverter] will use your system path.
+/// Image conversion using `cwebp`.
+final class SoftImageConverter with DataAssetMixin {
+  /// Initializes [SoftImageConverter] with the paths to the `cwebp` binaries.
+  ///
+  /// If not specified, [SoftImageConverter] will use the binary included
+  /// in the bundle or the in the system path if the `build_hook` and
+  /// `data_assets` are not compatible with your Flutter installation.
   SoftImageConverter({
     this.cwebpWindows,
     this.cwebpMacOS,
@@ -18,7 +23,12 @@ final class SoftImageConverter {
     } else if (Platform.isLinux && cwebpLinux != null) {
       _executable = cwebpLinux!;
     } else {
-      _executable = 'cwebp';
+      final filename = p.setExtension(
+        'cwebp',
+        Platform.isWindows ? '.exe' : '',
+      );
+
+      _executable = getDataAssetFile(filename)?.path ?? filename;
     }
   }
 

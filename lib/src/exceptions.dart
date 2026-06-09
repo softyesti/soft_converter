@@ -1,6 +1,9 @@
+/// Standard `soft_converter` exception.
 class SoftConverterException implements Exception {
-  SoftConverterException([this.message]);
+  /// Creates a new [SoftConverterException].
+  const SoftConverterException([this.message]);
 
+  /// Exception message.
   final dynamic message;
 
   @override
@@ -10,9 +13,12 @@ class SoftConverterException implements Exception {
   }
 }
 
+/// Exception from a `soft_converter` process.
 class SoftConverterProcessException extends SoftConverterException {
-  SoftConverterProcessException(super.message, {required this.code});
+  /// Creates a new [SoftConverterProcessException].
+  const SoftConverterProcessException(super.message, {required this.code});
 
+  /// Error code.
   final int code;
 
   @override
@@ -22,9 +28,12 @@ class SoftConverterProcessException extends SoftConverterException {
   }
 }
 
+/// “Path not found” exception from `soft_converter`.
 class SoftConverterPathNotFound extends SoftConverterException {
+  /// Creates a new [SoftConverterPathNotFound].
   SoftConverterPathNotFound(super.message, {required this.path});
 
+  /// File or Directory path.
   final String path;
 
   @override

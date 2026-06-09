@@ -2,10 +2,15 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:soft_converter/src/exceptions.dart';
+import 'package:soft_converter/src/mixins/data_asset_mixin.dart';
 
-final class SoftVideoConverter {
-  /// Initializes [SoftVideoConverter] with the paths to the FFmpeg binaries.
-  /// If not defined, [SoftVideoConverter] will use your system path.
+/// Video conversion using `FFmpeg`.
+final class SoftVideoConverter with DataAssetMixin {
+  /// Initializes [SoftVideoConverter] with the paths to the `FFmpeg` binaries.
+  ///
+  /// If not specified, [SoftVideoConverter] will use the binary included
+  /// in the bundle or the in the system path if the `build_hook` and
+  /// `data_assets` are not compatible with your Flutter installation.
   SoftVideoConverter({
     this.ffmpegWindows,
     this.ffmpegMacOS,
@@ -18,7 +23,12 @@ final class SoftVideoConverter {
     } else if (Platform.isLinux && ffmpegLinux != null) {
       _executable = ffmpegLinux!;
     } else {
-      _executable = 'ffmpeg';
+      final filename = p.setExtension(
+        'ffmpeg',
+        Platform.isWindows ? '.exe' : '',
+      );
+
+      _executable = getDataAssetFile(filename)?.path ?? filename;
     }
   }
 
