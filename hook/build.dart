@@ -12,9 +12,7 @@ void main(List<String> args) async => await build(args, (input, output) async {
   if (!input.config.buildDataAssets) return;
 
   final os = input.config.code.targetOS;
-
-  final outDir = Directory.fromUri(input.outputDirectoryShared);
-  final outPath = p.normalize(outDir.path).replaceFirst(r'\', '');
+  final outPath = Directory.fromUri(input.outputDirectoryShared).path;
 
   final ext = os == .windows ? '.exe' : '';
   final cwebpFilename = p.setExtension('cwebp', ext);
